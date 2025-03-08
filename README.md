@@ -13,7 +13,7 @@ A web application that generates personalized recipe recommendations based on yo
 
 - **Frontend**: Next.js, React, TypeScript, Tailwind CSS
 - **Backend**: Next.js API Routes
-- **AI**: OpenAI API
+- **AI**: Anthropic Claude API
 
 ## Getting Started
 
@@ -21,14 +21,14 @@ A web application that generates personalized recipe recommendations based on yo
 
 - Node.js 18.x or later
 - npm or yarn
-- OpenAI API key
+- Anthropic API key
 
 ### Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/autoparallel/doc.git
-   cd doc  
+   git clone https://github.com/yourusername/health-recipes.git
+   cd health-recipes
    ```
 
 2. Install dependencies:
@@ -38,9 +38,9 @@ A web application that generates personalized recipe recommendations based on yo
    yarn install
    ```
 
-3. Create a `.env.local` file in the root directory with your OpenAI API key:
+3. Create a `.env.local` file in the root directory with your Anthropic API key:
    ```
-   OPENAI_API_KEY=your_openai_api_key_here
+   ANTHROPIC_API_KEY=your_anthropic_api_key_here
    NEXT_PUBLIC_BASE_URL=http://localhost:3000
    ```
 
@@ -60,6 +60,16 @@ A web application that generates personalized recipe recommendations based on yo
 3. Submit the form to process your data
 4. View your personalized recipe recommendations
 5. Click on a recipe to see detailed information, ingredients, and instructions
+
+## Getting an Anthropic API Key
+
+To use this application, you'll need an API key from Anthropic:
+
+1. Visit [Anthropic's Console](https://console.anthropic.com/) and create an account
+2. Go to the API Keys section to create a new API key
+3. Copy the API key and paste it into your `.env.local` file
+
+Anthropic offers a free tier with limited usage, which should be enough for testing this application.
 
 ## Future Enhancements
 
