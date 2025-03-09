@@ -1,5 +1,5 @@
 import React from 'react';
-import { Recipe } from '@/lib/openai';
+import { Recipe } from '@/lib/llm';
 
 // Fixed, static fallback image URL that we know works with Next.js
 const FALLBACK_IMAGE_URL = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';

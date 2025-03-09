@@ -1,6 +1,8 @@
 // Simple script to test Anthropic API key using node-fetch
-require('dotenv').config({ path: '.env.local' });
-const fetch = require('node-fetch');
+import dotenv from 'dotenv';
+import fetch from 'node-fetch';
+
+dotenv.config({ path: '.env.local' });
 
 async function testAnthropicAPI() {
     try {

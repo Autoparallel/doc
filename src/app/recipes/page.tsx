@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import RecipeCard from '../../components/RecipeCard';
 import { mockRecipes } from '../../lib/mock-data';
-import type { Recipe } from '../../lib/openai';
+import type { Recipe } from '../../lib/llm';
 
 export default function RecipesPage() {
     const [recipes, setRecipes] = useState<Recipe[]>([]);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { processHealthData, HealthData } from '@/lib/openai';
+import { processHealthData, HealthData } from '@/lib/llm';
 
 export async function POST(req: NextRequest) {
     try {

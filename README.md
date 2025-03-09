@@ -27,8 +27,8 @@ A web application that generates personalized recipe recommendations based on yo
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/health-recipes.git
-   cd health-recipes
+   git clone https://github.com/autoparallel/doc.git
+   cd doc
    ```
 
 2. Install dependencies:

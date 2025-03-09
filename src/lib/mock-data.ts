@@ -1,4 +1,4 @@
-import { Recipe } from "./openai";
+import { Recipe } from "./llm";
 
 // Mock recipe data to use as a fallback if the API fails
 export const mockRecipes: Recipe[] = [
