@@ -137,14 +137,35 @@ Format your response as a valid JSON array of recipe objects. Each recipe object
                 const recipes = Array.isArray(parsedResponse) ? parsedResponse : parsedResponse.recipes || [];
 
                 // Add IDs to the recipes for UI purposes and ensure valid image URLs
-                const processedRecipes = recipes.map((recipe: Partial<Recipe>, index: number) => ({
-                    ...recipe,
-                    id: index + 1,
-                    // Use a real image URL (not placeholder_url) for Next.js Image component
-                    image: recipe.image && recipe.image !== "placeholder_url"
-                        ? recipe.image
-                        : `https://images.unsplash.com/photo-${1550000000000 + index}?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80`
-                }));
+                const processedRecipes = recipes.map((recipe: Partial<Recipe>, index: number) => {
+                    // Helper function to ensure field is array
+                    const ensureArray = (field: string[] | string | undefined): string[] => {
+                        if (!field) return [];
+                        if (Array.isArray(field)) return field;
+                        if (typeof field === 'string') {
+                            // Handle possible comma-separated strings
+                            if (field.includes(',')) {
+                                return field.split(',').map(item => item.trim()).filter(Boolean);
+                            }
+                            return [field];
+                        }
+                        return [];
+                    };
+
+                    return {
+                        ...recipe,
+                        id: index + 1,
+                        // Format array fields properly
+                        tags: ensureArray(recipe.tags),
+                        benefits: ensureArray(recipe.benefits),
+                        ingredients: ensureArray(recipe.ingredients),
+                        instructions: ensureArray(recipe.instructions),
+                        // Use a real image URL (not placeholder_url) for Next.js Image component
+                        image: recipe.image && recipe.image !== "placeholder_url"
+                            ? recipe.image
+                            : `https://images.unsplash.com/photo-${1550000000000 + index}?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80`
+                    };
+                });
 
                 // Cache the results to prevent duplicate API calls
                 responseCache.set(cacheKey, processedRecipes);
