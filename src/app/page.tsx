@@ -106,7 +106,7 @@ export default function HomePage() {
                   </div>
                   <div className="hidden md:block step-connector"></div>
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-white">Upload Health Data</h3>
+                <h3 className="text-xl font-bold mb-2 text-white">Upload</h3>
                 <p className="text-muted">
                   Connect your health app or manually enter your health metrics and dietary preferences.
                 </p>
@@ -120,9 +120,9 @@ export default function HomePage() {
                   </div>
                   <div className="hidden md:block step-connector"></div>
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-white">AI Analysis</h3>
+                <h3 className="text-xl font-bold mb-2 text-white">Analyze</h3>
                 <p className="text-muted">
-                  Our AI analyzes your health data to identify nutritional needs and dietary recommendations.
+                  Our model analyzes your health data to identify nutritional needs and dietary recommendations.
                 </p>
               </div>
 
@@ -133,7 +133,7 @@ export default function HomePage() {
                     <span className="text-accent text-2xl font-bold">3</span>
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-white">Get Personalized Recipes</h3>
+                <h3 className="text-xl font-bold mb-2 text-white">Peronalize</h3>
                 <p className="text-muted">
                   Receive tailored recipes that support your health goals and match your preferences.
                 </p>
