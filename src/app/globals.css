@@ -1,26 +1,271 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Base styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background: #000000;
+    color: #f0f0f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    line-height: 1.5;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 0.5em;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+p {
+    color: #b0b0b0;
+}
+
+/* Links */
+a {
+    color: #22c55e;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #4ade80;
+}
+
+.nav-link {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    color: #22c55e;
+}
+
+.nav-link:hover {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: #4ade80;
+}
+
+/* Layout Elements */
+.page-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #0f0f0f;
+}
+
+.header {
+    background: #161616;
+    border-bottom: 1px solid #333333;
+    padding: 1rem 0;
+}
+
+.main-content {
+    flex-grow: 1;
+}
+
+.footer {
+    background: #161616;
+    border-top: 1px solid #333333;
+    padding: 2rem 0;
+}
+
+.section {
+    padding: 4rem 0;
+}
+
+.section-dark {
+    background: #0f0f0f;
+}
+
+.section-darker {
+    background: #0a0a0a;
+}
+
+.section-gradient {
+    background: linear-gradient(135deg, #161616 0%, #0a0a0a 100%);
+}
+
+/* Components */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-primary {
+    background: #22c55e;
+    color: white;
+    padding: 0.5rem 1rem;
+}
+
+.btn-primary:hover {
+    background: #16a34a;
+}
+
+.btn-secondary {
+    background: #222222;
+    color: #ffffff;
+    border: 1px solid #444444;
+    padding: 0.5rem 1rem;
+}
+
+.btn-secondary:hover {
+    border-color: #666666;
+    background: #333333;
+}
+
+.card {
+    background: #1a1a1a;
+    border: 1px solid #333333;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Form elements */
+input,
+select,
+textarea {
+    background: #222222;
+    color: #ffffff;
+    border: 1px solid #444444;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25);
+}
+
+::placeholder {
+    color: #777777;
+}
+
+/* Custom utility classes */
+.text-white {
+    color: #ffffff;
+}
+
+.text-muted {
+    color: #b0b0b0;
+}
+
+.text-accent {
+    color: #22c55e;
+}
+
+.bg-subtle {
+    background: #222222;
+}
+
+.border-subtle {
+    border-color: #444444;
+}
+
+.muted-card {
+    background: #141414;
+    border: 1px solid #333333;
+    border-radius: 0.375rem;
+    padding: 1rem;
+}
+
+/* Disable hover effects */
+.hover-none {
+    transition: none !important;
+}
+
+.hover-none:hover {
+    transform: none !important;
+    box-shadow: inherit !important;
+    filter: none !important;
+}
+
+/* Icons and decorative elements */
+.icon-circle {
+    background-color: rgba(34, 197, 94, 0.1);
+    padding: 0.5rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.accent-border {
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.step-connector {
+    position: absolute !important;
+    top: 30px !important;
+    /* Half of the 16px height of the circle */
+    left: 50% !important;
+    height: 2px !important;
+    width: 100% !important;
+    background: linear-gradient(to right, #22c55e 0%, rgba(34, 197, 94, 0) 100%) !important;
+    z-index: 0 !important;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 9999px;
+}
+
+.badge-accent {
+    color: #22c55e;
+    background-color: rgba(34, 197, 94, 0.1);
+}
+
+/* Loading animations */
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Add cursor pointer to all buttons and interactive elements */
+.btn,
+button,
+[type="button"],
+[type="submit"],
+[type="reset"] {
+    cursor: pointer !important;
+}
+
+/* Specific styles for the green buttons and login as demo button */
+.btn-primary,
+.login-demo-btn,
+form button[type="submit"] {
+    cursor: pointer !important;
 }

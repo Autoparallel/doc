@@ -1,20 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import Providers from "./providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Health Recipes - Personalized Nutrition Based on Your Health Data",
-  description: "Upload your health data and get personalized recipe recommendations to improve your well-being",
+  title: "Health Recipes App",
+  description: "Get personalized recipe recommendations based on your health data",
 };
 
 export default function RootLayout({
@@ -24,10 +17,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -1,0 +1,71 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String       @id @default(uuid())
+  email         String       @unique
+  name          String?
+  password      String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  healthData    HealthData?
+  recipes       Recipe[]
+  favoriteRecipes RecipeFavorite[]
+}
+
+model HealthData {
+  id            String       @id @default(uuid())
+  userId        String       @unique
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  age           Int?
+  weight        Float?
+  height        Float?
+  allergies     String?
+  conditions    String?
+  goals         String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Recipe {
+  id            String       @id @default(uuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title         String
+  description   String
+  image         String?
+  prepTime      String?
+  cookTime      String?
+  calories      Int?
+  protein       String?
+  carbs         String?
+  fats          String?
+  tags          String?      // Stored as comma-separated values
+  benefits      String?      // Stored as comma-separated values
+  ingredients   String?      // Stored as comma-separated values
+  instructions  String?      // Stored as comma-separated values
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  favorites     RecipeFavorite[]
+}
+
+model RecipeFavorite {
+  id        String   @id @default(uuid())
+  userId    String
+  recipeId  String
+  rating    Int?     // Optional rating (1-5)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, recipeId])
+} 

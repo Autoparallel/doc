@@ -1,22 +1,50 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import RecipeCard from '../../components/RecipeCard';
-import { mockRecipes } from '../../lib/mock-data';
-import type { Recipe } from '../../lib/llm';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import SignOutButton from '@/components/SignOutButton';
+
+// Define Recipe type directly to avoid import issues
+interface Recipe {
+    id?: string | number;
+    title: string;
+    description: string;
+    image?: string;
+    prepTime?: string;
+    cookTime?: string;
+    calories?: number;
+    protein?: string;
+    carbs?: string;
+    fats?: string;
+    tags?: string;
+    benefits?: string;
+}
 
 export default function RecipesPage() {
+    const { status } = useSession();
+    const router = useRouter();
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [usingMockData, setUsingMockData] = useState(false);
-    const hasLoadedRealData = useRef(false);
 
-    // Function to load recipes from session storage
+    useEffect(() => {
+        // Redirect to login if not authenticated
+        if (status === 'unauthenticated') {
+            router.push('/login');
+            return;
+        }
+
+        // Load recipes if authenticated
+        if (status === 'authenticated') {
+            loadRecipes();
+        }
+    }, [status, router]);
+
     const loadRecipes = () => {
         try {
-            console.log('Checking for recipes in session storage...');
+            console.log('Attempting to load recipes from session storage...');
 
             // Ensure we're on the client side
             if (typeof window === 'undefined') {
@@ -28,13 +56,11 @@ export default function RecipesPage() {
 
             // Get recipes from session storage
             const recipesJson = sessionStorage.getItem('recipes');
+            console.log('Retrieved from storage:', recipesJson);
 
             if (!recipesJson) {
-                if (!usingMockData) {
-                    console.log('No recipes found in session storage, using mock data');
-                    setRecipes(mockRecipes);
-                    setUsingMockData(true);
-                }
+                console.log('No recipes found in session storage');
+                setError('No recipes found. Please generate recipes first.');
                 setLoading(false);
                 return;
             }
@@ -42,137 +68,116 @@ export default function RecipesPage() {
             try {
                 // Parse the JSON
                 const parsedRecipes = JSON.parse(recipesJson);
+                console.log('Parsed recipes:', parsedRecipes);
 
                 if (Array.isArray(parsedRecipes) && parsedRecipes.length > 0) {
-                    // Check if the parsed recipes are different from the current recipes
-                    const areNewRecipes = JSON.stringify(parsedRecipes) !== JSON.stringify(recipes);
-
-                    if (areNewRecipes) {
-                        console.log('Found new recipes in session storage, updating UI');
-                        console.log('First recipe title:', parsedRecipes[0]?.title);
-                        setRecipes(parsedRecipes);
-                        setUsingMockData(false);
-                        hasLoadedRealData.current = true;
-
-                        // Show alert when real data is loaded
-                        if (usingMockData) {
-                            alert('Your personalized recipes are now ready!');
-                        }
-                    }
+                    setRecipes(parsedRecipes);
                 } else {
-                    if (!usingMockData) {
-                        console.log('Parsed recipes are empty or not an array, using mock data');
-                        setRecipes(mockRecipes);
-                        setUsingMockData(true);
-                    }
+                    console.log('Parsed recipes are empty or not an array');
+                    setError('No recipes found. Please generate recipes first.');
                 }
             } catch (parseError) {
                 console.error('Error parsing recipes JSON:', parseError);
-                if (!usingMockData) {
-                    setError('Error parsing recipe data');
-                    setRecipes(mockRecipes);
-                    setUsingMockData(true);
-                }
+                setError('Error parsing recipe data');
             }
         } catch (error) {
             console.error('Error loading recipes:', error);
-            if (!usingMockData) {
-                setError('An error occurred while loading recipes');
-                setRecipes(mockRecipes);
-                setUsingMockData(true);
-            }
+            setError('An error occurred while loading recipes');
         } finally {
             setLoading(false);
         }
     };
 
-    // Initial load
-    useEffect(() => {
-        // Log current mock recipes for debugging
-        console.log('Mock recipe titles:', mockRecipes.map(r => r.title));
-
-        loadRecipes();
-
-        // Set up polling to check for new recipes every 2 seconds
-        const pollingInterval = setInterval(() => {
-            // Only poll if we haven't loaded real data yet
-            if (!hasLoadedRealData.current) {
-                loadRecipes();
-            } else {
-                console.log('Already loaded real data, stopping polling');
-                clearInterval(pollingInterval);
-            }
-        }, 2000);
-
-        // Clean up the interval when component unmounts
-        return () => clearInterval(pollingInterval);
-    }, []);
+    if (status === 'loading') {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-subtle">
+                <div className="spinner rounded-full h-12 w-12 border-t-2 border-b-2 border-accent" />
+            </div>
+        );
+    }
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <header className="bg-white dark:bg-gray-900 shadow-sm">
-                <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+        <div className="page-container">
+            <header className="header">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center">
-                        <Link href="/" className="font-bold text-xl text-blue-600">
+                        <Link href="/" className="font-bold text-xl text-accent">
                             Health Recipes
                         </Link>
-                        <Link href="/upload" className="text-sm text-blue-600 hover:text-blue-500">
-                            Upload New Health Data
-                        </Link>
+                        <div className="flex items-center space-x-4">
+                            <Link href="/dashboard" className="nav-link">
+                                Dashboard
+                            </Link>
+                            <Link href="/upload" className="nav-link">
+                                Generate New Recipes
+                            </Link>
+                            <SignOutButton />
+                        </div>
                     </div>
                 </div>
             </header>
 
-            <main className="flex-grow py-8 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-7xl mx-auto">
+            <main className="main-content section-dark">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                        <h1 className="text-3xl font-bold text-white">
                             Your Personalized Recipes
                         </h1>
-                        <p className="mt-2 text-lg text-gray-600 dark:text-gray-300">
+                        <p className="mt-2 text-lg text-muted">
                             Based on your health data, we&apos;ve created these personalized recipes for you.
                         </p>
-                        {!usingMockData && (
-                            <p className="mt-2 text-sm font-semibold text-green-600">
-                                ✅ These are your AI-generated personalized recipes
-                            </p>
-                        )}
                     </div>
 
-                    {usingMockData && !error && (
-                        <div className="mb-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md text-center">
-                            <p className="text-blue-600 dark:text-blue-300">
-                                Showing example recipes while your personalized recommendations are being generated...
-                            </p>
-                        </div>
-                    )}
-
                     {error && (
-                        <div className="mb-6 bg-red-50 dark:bg-red-900/20 p-4 rounded-md text-center">
-                            <p className="text-red-600 dark:text-red-400">{error}</p>
-                            <p className="mt-2 text-gray-600 dark:text-gray-300">
-                                Showing example recipes instead.
-                            </p>
+                        <div className="mb-6 card text-center">
+                            <p className="text-muted mb-4">{error}</p>
+                            <Link
+                                href="/upload"
+                                className="btn btn-primary"
+                            >
+                                Generate Recipes
+                            </Link>
                         </div>
                     )}
 
                     {loading ? (
                         <div className="flex justify-center my-12">
-                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" />
+                            <div className="spinner rounded-full h-12 w-12 border-t-2 border-b-2 border-accent" />
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {recipes.map((recipe, index) => (
-                                <RecipeCard key={recipe.id || index} recipe={recipe} />
+                                <div key={recipe.id || index} className="card">
+                                    <h3 className="text-xl font-semibold text-white mb-2">
+                                        {recipe.title}
+                                    </h3>
+
+                                    <p className="text-muted mb-4 line-clamp-3">
+                                        {recipe.description}
+                                    </p>
+
+                                    <div className="flex justify-between items-center text-sm text-muted mb-4">
+                                        {recipe.prepTime && <div>Prep: {recipe.prepTime}</div>}
+                                        {recipe.cookTime && <div>Cook: {recipe.cookTime}</div>}
+                                        {recipe.calories && <div>{recipe.calories} cal</div>}
+                                    </div>
+
+                                    <Link
+                                        href={`/recipes/${recipe.id}`}
+                                        className="btn btn-primary inline-block mt-2"
+                                    >
+                                        View Recipe
+                                    </Link>
+                                </div>
                             ))}
                         </div>
                     )}
                 </div>
             </main>
 
-            <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-                <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+            <footer className="footer">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <p className="text-center text-sm text-muted">
                         © {new Date().getFullYear()} Health Recipes. All rights reserved.
                     </p>
                 </div>
