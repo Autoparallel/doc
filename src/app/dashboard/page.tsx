@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SignOutButton from '@/components/SignOutButton';
+import StravaConnectButton from '@/components/StravaConnectButton';
 
 // Define types for our data
 interface HealthData {
@@ -172,6 +173,11 @@ export default function DashboardPage() {
                                         </Link>
                                     </div>
                                 )}
+                            </div>
+
+                            {/* Strava Integration Section */}
+                            <div className="card mt-8">
+                                <StravaConnectButton />
                             </div>
                         </div>
 
